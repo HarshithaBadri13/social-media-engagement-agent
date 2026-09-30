@@ -1,38 +1,141 @@
-<<<<<<< HEAD
-# ✨ SocialSpark Social Media Engagement Agent
+🤖 Social Media Engagement Agent
 
-An agent that learns YOUR audience: which post styles, topics and timings work, how the community
-feels, and what the manager keeps correcting, then applies it to every draft.
+An AI-powered Social Media Engagement Agent built with Python and Streamlit. The application helps users analyze social media topics, generate engaging responses, and interact with content through an AI-powered interface.
 
-## Hindsight usage
-| Op | Where | Purpose |
-|---|---|---|
-| `retain` | post results, comment threads, approve/edit/reject feedback | build long-term memory |
-| `recall` | `draft_post`, `draft_reply` | pull relevant history (customer, topic, platform) |
-| `reflect` | `audience_insights` | synthesize patterns ("stories beat hard-sells 8x") |
+🚀 Features
 
-UI shows **Without memory vs With memory** side by side, the demo money shot.
+- 🤖 AI-powered social media engagement
+- 💬 Generate responses based on different topics
+- 📝 Create engaging social media content
+- 📊 Analyze engagement-related information
+- 🔄 Interactive Streamlit interface
+- 🔐 Secure API key configuration
+- 📱 Responsive and user-friendly UI
+- ⚡ Fast interaction through a lightweight Python application
 
-## Run
-```bash
-py -m pip install -r requirements.txt
-cp .env.example .env      # add keys (promo MEMHACK99 for Hindsight Cloud credits)
-py seed_data.py           # ~3 weeks of synthetic history (optional)
-py -m streamlit run frontend/app.py
-```
+🛠️ Technologies Used
 
-Set `GROQ_API_KEY` in `.env`. The Topic field accepts any user-entered subject; there is
-no predefined topic list. The backend sends the selected platform and topic directly to
-Groq, while Hindsight continues to provide the memory-powered comparison.
+- Python
+- Streamlit
+- AI / LLM API
+- Python-dotenv
+- Git & GitHub
 
-The Streamlit frontend lives in `frontend/app.py`; Hindsight and LLM integration lives in
-`backend/agent.py`. The root `app.py` and `agent.py` files remain compatibility entry points.
+📁 Project Structure
 
-## 60-second demo script
-1. Generate any topic: the left draft is generic, while the right uses relevant memory.
-2. Reply to `@arjun_k` ("late AGAIN"): agent recalls his previous late order + free replacement.
-3. Edit a draft, Approve, regenerate: the correction shows up next time.
-4. Insights tab: reflect summarizes the learning curve.
-=======
-# social-media-engagement-agent
->>>>>>> f3ce71940df95e888c73a4bcede02a834134f5bc
+social-media-engagement-agent/
+│
+├── app.py
+├── requirements.txt
+├── .gitignore
+├── README.md
+│
+├── assets/
+│   └── images/
+│
+└── other project files
+
+«The exact file structure may vary depending on the implementation.»
+
+⚙️ Installation
+
+1. Clone the repository
+
+git clone YOUR_GITHUB_REPOSITORY_URL
+cd YOUR_PROJECT_FOLDER
+
+2. Create a virtual environment
+
+Windows:
+
+python -m venv venv
+venv\Scripts\activate
+
+3. Install dependencies
+
+pip install -r requirements.txt
+
+4. Configure API keys
+
+Create a ".env" file if your application uses environment variables:
+
+GROQ_API_KEY=your_api_key_here
+
+Never upload your ".env" file or API keys to GitHub.
+
+Add this to ".gitignore":
+
+.env
+venv/
+__pycache__/
+
+▶️ Run Locally
+
+Start the Streamlit application using:
+
+python -m streamlit run app.py
+
+The application will normally be available at:
+
+http://localhost:8501/
+
+You can also open:
+
+http://127.0.0.1:8501/
+
+🌐 Deployment
+
+This application can be deployed using Streamlit Community Cloud.
+
+Deployment steps
+
+1. Push the project to GitHub.
+2. Open Streamlit Community Cloud.
+3. Connect your GitHub account.
+4. Select the repository.
+5. Select the required branch.
+6. Select "app.py" as the main file.
+7. Add required API keys under Secrets.
+8. Deploy the application.
+
+For deployment, use Streamlit Secrets instead of committing API keys to GitHub.
+
+🔑 Environment Variables
+
+The application may require the following:
+
+Variable| Purpose
+"GROQ_API_KEY"| Access to the AI/LLM service
+
+Add only the variables actually required by your implementation.
+
+🔄 Updating the Application
+
+After modifying the code:
+
+git add .
+git commit -m "Update application"
+git push
+
+If the GitHub repository is connected to Streamlit Cloud, the deployed application can automatically rebuild from the updated repository.
+
+🎯 Project Goal
+
+The goal of this project is to provide an AI-powered assistant that can help users handle social media engagement more efficiently by generating relevant, contextual, and engaging responses across different topics.
+
+🔒 Security
+
+- API keys should be stored using environment variables or Streamlit Secrets.
+- ".env" files should never be committed to GitHub.
+- Sensitive credentials should not be included in source code.
+- Use separate development and production credentials.
+
+📌 Local Development
+
+The application is intended to run locally using:
+
+python -m streamlit run app.py
+
+Local URL:
+
+http://localhost:8501/
