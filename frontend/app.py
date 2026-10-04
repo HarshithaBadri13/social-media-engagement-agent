@@ -1,5 +1,4 @@
 import re
-import time
 
 import streamlit as st
 
@@ -117,24 +116,6 @@ if "page" not in st.session_state:
     st.session_state.page = "landing"
 
 if st.session_state.page == "landing":
-    st.markdown(
-        """
-                <main class="splash-screen" aria-label="SocialSpark">
-                    <span class="splash-social orbit-instagram" aria-hidden="true"><span class="social-glyph"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.7" cy="6.5" r="1.2"/></svg></span></span>
-                    <span class="splash-social orbit-linkedin" aria-hidden="true"><span class="social-glyph"><svg viewBox="0 0 24 24"><path d="M5.2 3.4a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2ZM3.4 9h3.7v11.6H3.4V9Zm5.9 0h3.5v1.6h.1a3.8 3.8 0 0 1 3.4-1.9c3.7 0 4.4 2.4 4.4 5.5v6.4H17v-5.7c0-1.4 0-3.2-2-3.2s-2.3 1.5-2.3 3.1v5.8H9.3V9Z"/></svg></span></span>
-                    <span class="splash-social orbit-x" aria-hidden="true"><span class="social-glyph"><svg viewBox="0 0 24 24"><path d="M18.9 1.2h3.7l-8.1 9.2L24 23.2h-7.4l-5.8-7.6-6.6 7.6H.5l8.6-9.8L0 1.2h7.6l5.2 6.9 6.1-6.9Zm-1.3 20h2L6.5 3.1h-2L17.6 21.2Z"/></svg></span></span>
-                    <span class="splash-social orbit-facebook" aria-hidden="true"><span class="social-glyph"><svg viewBox="0 0 24 24"><path d="M24 12.1C24 5.4 18.6 0 12 0S0 5.4 0 12.1C0 18.1 4.4 23.1 10.1 24v-8.4H7.1v-3.5h3V9.4c0-3 1.8-4.7 4.5-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9v2.3h3.3l-.5 3.5h-2.8V24C19.6 23.1 24 18.1 24 12.1Z"/></svg></span></span>
-                    <span class="splash-social orbit-youtube" aria-hidden="true"><span class="social-glyph"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.6 12 3.6 12 3.6s-7.6 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.8.5 9.4.5 9.4.5s7.6 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.3 3.6-6.3 3.6Z"/></svg></span></span>
-                    <span class="splash-social orbit-tiktok" aria-hidden="true"><span class="social-glyph"><svg viewBox="0 0 24 24"><path d="M19.6 7.5a7.2 7.2 0 0 1-4.4-1.9v8.1a6.1 6.1 0 1 1-6.1-6.1c.4 0 .8 0 1.2.1v3.4a2.8 2.8 0 1 0 1.8 2.6V2h3.5a7.2 7.2 0 0 0 4 5.5v3.6Z"/></svg></span></span>
-                    <div class="splash-content">
-                        <div class="splash-mark" aria-hidden="true"><span class="splash-glyph">✨</span></div>
-                        <h1 class="splash-title">SocialSpark</h1>
-                    </div>
-                </main>
-        """,
-        unsafe_allow_html=True,
-    )
-    time.sleep(5.0)
     st.session_state.page = "signup"
     st.rerun()
 
@@ -189,11 +170,26 @@ def draft_ui(kind, generate, topic_value=None):
     plain_panel = first.empty()
     memory_panel = second.empty()
 
+    def normalize_result(result):
+        if isinstance(result, dict):
+            return {
+                "draft": result.get("draft") or "",
+                "memory": result.get("memory") or "",
+            }
+        if isinstance(result, str):
+            return {"draft": result, "memory": ""}
+        if result is None:
+            return {"draft": "", "memory": ""}
+        return {"draft": str(result), "memory": ""}
+
     def show_result(panel, heading, result, use_memory=False):
         panel.empty()
+        result = normalize_result(result)
         with panel.container():
             st.subheader(heading)
             draft = result["draft"]
+            if not draft:
+                draft = "[No draft generated]"
             if draft.startswith("["):
                 st.error(draft)
             elif use_memory:
@@ -215,7 +211,7 @@ def draft_ui(kind, generate, topic_value=None):
                 st.subheader("With Hindsight memory")
                 st.caption("Waiting for the first draft...")
             try:
-                plain = generate(False)
+                plain = normalize_result(generate(False))
             except Exception as error:
                 plain = {"draft": f"[Generation error: {error}]", "memory": ""}
             st.session_state[kind] = {
@@ -227,7 +223,7 @@ def draft_ui(kind, generate, topic_value=None):
                 st.subheader("With Hindsight memory")
                 st.info("Applying relevant memory...")
             try:
-                memory_draft = generate(True)
+                memory_draft = normalize_result(generate(True))
             except Exception as error:
                 memory_draft = {"draft": f"[Memory generation error: {error}]", "memory": ""}
             st.session_state[kind]["mem"] = memory_draft
@@ -235,6 +231,8 @@ def draft_ui(kind, generate, topic_value=None):
     output = st.session_state.get(kind)
     if not output:
         return
+    output["plain"] = normalize_result(output.get("plain"))
+    output["mem"] = normalize_result(output.get("mem"))
     if not st.session_state.get(f"gen_{kind}"):
         show_result(plain_panel, "Without memory", output["plain"])
         if output["mem"]["draft"]:
